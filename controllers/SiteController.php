@@ -9,6 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\BlogForm;
 
 class SiteController extends Controller
 {
@@ -63,7 +64,23 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
-
+// функция перехода на стриницу с использованием функций из модели для получения массива из базы данных
+    public function actionBlog()
+    {
+//        создание нового класса модели blog
+        $model = new BlogForm();
+        // Проверка на наличие отправленных данных на сохранение
+        if ($_POST != null){
+            // Сохранение данных из пост'а
+            $model->name = $_POST['blogForm']['name'];
+            $model->text = $_POST['blogForm']['text'];
+            $model->save();
+        }
+//        Использование функции из модели blogForm
+        $blogs = $model->getBlogs();
+        return $this->render('blog',['blogs' => $blogs, 'model' => $model]);
+    }
+    
     /**
      * Login action.
      *
